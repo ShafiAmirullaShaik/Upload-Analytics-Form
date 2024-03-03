@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+    crossorigin="anonymous"></script>
+  <title>Form | AI Space</title>
+  <style>
+    * {
+      font-family: Poppins;
+      margin: 0;
+      padding: 0;
+    }
+
+    .FormContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 90%;
+    }
+
+    .image {
+      width: 850px;
+      height: 600px;
+      border-radius: 30px;
+    }
+
+    .formDiv {
+      background-color: #fff;
+      padding: 50px;
+      border-radius: 30px;
+      width: 50%;
+      margin-left: -200px;
+    }
+
+    .imageText {
+      color: #36b0ed;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="FormContainer container">
+    <div class="imageDiv">
+      <img class="image" src="/static/images/formImage.jpg" alt="">
+    </div>
+    <div class="formDiv shadow">
+      <h2 class="imageText">Upload Files | AI Space</h2>
+      <form action="{% url 'fileUpload' %}" method="POST" enctype="multipart/form-data" id="uploadForm">
+        {% csrf_token %}
+        <div class="form-group">
+          <input style="height: 45px;" type="file" class="form-control" id="filename" aria-describedby="fileHelp"
+            placeholder="Upload file" name="file" />
+          <small id="fileHelp" class="form-text text-muted">
+            We'll never share your file with anyone else.
+          </small>
+          <p style="color: red;" id="UploadErrorMsg" class="error" name="UploadErrorMsg"></p> <!-- Added class error -->
+        </div>
+        <div class="form-group">
+          <label for="extension">Extension:</label>
+          <select class="form-select" aria-label="Default select example" id="extensionSelect" name="extension">
+            <option value="" selected disabled>Choose extension</option>
+            <option value=".csv">.csv</option>
+            <option value=".xlsx">.xlsx</option>
+            <option value=".xls">.xls</option>
+            <option value=".pdf">.pdf</option>
+          </select>
+          <p style="color: red;" id="extensionError" class="error"></p> <!-- Added class error -->
+        </div>
+        <button id="uploadBtn" type="button" class="btn btn-primary mb-1">
+          Submit
+        </button>
+        <p style="color:#030303;" id="msg" class="" name="msg">{{ msg }}</p>
+        <a href="{% url 'filesList' %}" name="analyticsPage">{{ analyticsPage }}</a>
+    </div>
+  </div>
+
+
+  {% if confirm_replace %}
+  <div id="confirmReplaceModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Replace Existing File</h5>
+          <button onclick="closeModal()" type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close">Close</button>
+        </div>
+        <div class="modal-body">
+          <p>
+            File with the same name already exists. Do you want to replace
+            it?
+          </p>
+          <input type="text" id="newFilename" name="newFilename" placeholder="Enter new filename" />
+          <p class="" id="reEntername" name="reEntername">{{reEntername}}</p>
+          <div class="form-group">
+            <label for="extension">Extension:</label>
+            <select class="form-select" aria-label="Default select example" id="extensionSelect1" name="extension1">
+              <option value="" selected disabled>Choose extension</option>
+              <option value=".csv">.csv</option>
+              <option value=".xlsx">.xlsx</option>
+              <option value=".xls">.xls</option>
+              <option value=".pdf">.pdf</option>
+            </select>
+            <p style="color: red;" id="extensionError" class="error"></p> <!-- Added class error -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button onclick="closeModal()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="button" id="confirmReplaceBtn" class="btn btn-danger">
+            Replace
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  </form>
+  <script>
+    
+  </script>
+  <script src="/static/js/form.js"></script>
+
+</body>
+
+</html>
