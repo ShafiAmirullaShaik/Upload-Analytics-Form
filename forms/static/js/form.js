@@ -1,3 +1,13 @@
+document.addEventListener('DOMContentLoaded', function () {
+  // Get references to the select and input elements
+  let data_source = document.getElementById('datasource');
+  let userDataSource = document.getElementById('userDataSource');
+
+  data_source.addEventListener('change', function () {
+      userDataSource.value = data_source.options[data_source.selectedIndex].value.trim();
+  });
+});
+
 document.getElementById("uploadBtn").addEventListener("click", function () {
     let file_name = document.getElementById("filename").value.trim();
     let extension_select = document.getElementById("extensionSelect");
@@ -5,6 +15,9 @@ document.getElementById("uploadBtn").addEventListener("click", function () {
     let Upload_ErrorMsg = document.getElementById("UploadErrorMsg");
     let extension_error = document.getElementById("extensionError");
     let msg = document.getElementById('msg')
+
+    
+
   
     Upload_ErrorMsg.textContent = "";
     extension_error.textContent = "";
@@ -51,7 +64,9 @@ let confirmReplaceBtn = document.getElementById('confirmReplaceBtn');
             document.getElementById('reEntername').innerText = data.reEntername;
           } else {
             let msg = document.getElementById('msg')
+            // let link = document.getElementById('link')
             msg.textContent = 'File renamed Successfully and Uploaded to Bucket!'
+            // link.textContent = 'Go for analysis'
             document.getElementById('reEntername').innerText = 'File renamed successfully!!';
             setTimeout(() => {
               closeModal();

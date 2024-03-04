@@ -63,6 +63,21 @@
       <h2 class="imageText">Upload Files | AI Space</h2>
       <form action="{% url 'fileUpload' %}" method="POST" enctype="multipart/form-data" id="uploadForm">
         {% csrf_token %}
+        <div class="form-group mb-2">
+          <label for="datasource">Datasource:</label><br>
+          <select class="form-select w-100" aria-label="Default select example" id="datasource" name="datasource">
+            <option value="" selected disabled>Choose DataSource</option>
+            <option value="Production">Production</option>
+            <option value="Sales">Sales</option>
+            <option value="Foods">Foods</option>
+            <option value="Clothing">Clothing</option>
+          </select>
+          <p style="color: red;" id="extensionError" class="error"></p> <!-- Added class error -->
+        </div>
+        <div class="form-group">
+          <label for="userDataSource">Enter DataSource:</label>
+          <input name="userDataSource" type="text" class="form-control" id="userDataSource" aria-describedby="emailHelp" placeholder="Enter DataSource">
+        </div>
         <div class="form-group">
           <input style="height: 45px;" type="file" class="form-control" id="filename" aria-describedby="fileHelp"
             placeholder="Upload file" name="file" />
@@ -78,7 +93,7 @@
             <option value=".csv">.csv</option>
             <option value=".xlsx">.xlsx</option>
             <option value=".xls">.xls</option>
-            <option value=".pdf">.pdf</option>
+            <option value=".pdf">.txt</option>
           </select>
           <p style="color: red;" id="extensionError" class="error"></p> <!-- Added class error -->
         </div>
@@ -86,7 +101,7 @@
           Submit
         </button>
         <p style="color:#030303;" id="msg" class="" name="msg">{{ msg }}</p>
-        <a href="{% url 'filesList' %}" name="analyticsPage">{{ analyticsPage }}</a>
+        <a href="{% url 'filesList' %}" id="link" name="analyticsPage">{{ analyticsPage }}</a>
     </div>
   </div>
 
@@ -114,7 +129,7 @@
               <option value=".csv">.csv</option>
               <option value=".xlsx">.xlsx</option>
               <option value=".xls">.xls</option>
-              <option value=".pdf">.pdf</option>
+              <option value=".pdf">.txt</option>
             </select>
             <p style="color: red;" id="extensionError" class="error"></p> <!-- Added class error -->
           </div>
@@ -138,5 +153,4 @@
   <script src="/static/js/form.js"></script>
 
 </body>
-
 </html>

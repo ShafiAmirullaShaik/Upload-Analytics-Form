@@ -1,5 +1,5 @@
 from django.contrib import admin
-from forms.models import filesData
+from forms.models import fileData
 
 # Register your models here.
-admin.site.register(filesData)
+admin.site.register(fileData)
