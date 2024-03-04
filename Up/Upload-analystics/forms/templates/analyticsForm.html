@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <title>Traditional ML | AI Space</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Poppins;
+        }
+
+        .FormContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 90%;
+        }
+
+        .Form {
+            width: 50%;
+            min-height: 10%;
+            border-radius: 30px;
+            padding: 30px;
+        }
+
+        .List {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 10px;
+            list-style: none;
+        }
+
+        .Checkbox {
+            margin-right: 3px;
+        }
+
+        .Header {
+            font-size: 40px;
+            color: #36b0ed;
+            margin-bottom: 20px;
+        }
+
+        .form-select {
+            width: 100%;
+        }
+
+        .firstField {
+            margin-bottom: 10px;
+        }
+
+        .btnContainer {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn {
+            background-color: #36b0ed;
+            color: #fff;
+            font-weight: 500;
+            border: none;
+            border-radius: 15px;
+            height: 45px;
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="FormContainer container">
+        <div class="Form shadow">
+            <h1 class="Header">Advantage Analytics</h1>
+            <div class="firstField">
+                <label for="extension">Choose DataSource:</label><br>
+                <select class="form-select" aria-label="Default select example" onclick="getDataSourceNames(this.value)"
+                    name="DataSourceSelection">
+                    <option value="" selected disabled>Choose DataSource</option>
+                    {% for files in datasources %}
+                    <option value="{{ files }}">{{ files }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="filesList" class="firstField">
+                <label for="extension">Choose File:</label><br>
+                <select class="form-select" aria-label="Default select example" onclick="getColumnsList(this.value)"
+                    name="filenameSelection" id="selectOptions">
+                    <option value="" selected disabled>Choose files</option>
+                </select>
+            </div>
+            <!-- columnsdropdown -->
+            <div class="" id="getColumns">
+                <h5 class="" style="color: #36b0ed;" id="Columns"></h5>
+                <ul class="List" id="getColumnList"></ul>
+            </div>
+            <div class="" id="selectedColumnsOutput"></div>
+            <div class="btnContainer mt-2">
+                <button class="btn" style="display: none;" id="submitButton">Go for Insights</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let fileName = ''
+        async function getDataSourceNames(data) {
+            
+            const response = await fetch(`/list_files/?fileNameData=${data}`);
+            const { files } = await response.json();
+        
+            let selectOptions = document.getElementById('selectOptions');
+        
+            selectOptions.innerHTML = '';
+            let defaultOption = document.createElement('option');
+            defaultOption.value = '';  
+            defaultOption.text = 'Choose files';
+            defaultOption.selected = true;
+            defaultOption.disabled = true;
+
+            selectOptions.appendChild(defaultOption);
+        
+            files.forEach(element => {
+                let optionElement = document.createElement('option');
+                
+                optionElement.value = element;
+                optionElement.text = element;
+
+                selectOptions.appendChild(optionElement);
+            });
+        };
+
+        {% comment %} let filesList = document.getElementById('filesList')
+        filesList.style.display = 'block' {% endcomment %}
+
+        let selectedColumns = []
+        async function getColumnsList(data) {
+            fileName = data
+            selectedColumns = [];
+            const response = await fetch(`/getColumnList/?fileNameData=${data}`);
+            const { columns } = await response.json();
+
+            let getColumnList = document.getElementById('getColumnList');
+            let selectedColumnsOutput = document.getElementById('selectedColumnsOutput')
+            let Columns = document.getElementById('Columns')
+            Columns.textContent = 'Columns:'
+            getColumnList.innerHTML = '';
+            selectedColumnsOutput.innerHTML = ''
+
+            columns.forEach(function (element) {
+                let columnlist = document.createElement('li');
+
+                let checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'selectedColumn';
+                checkbox.value = element;
+                checkbox.id = element;
+                checkbox.className = 'Checkbox'
+                checkbox.addEventListener('change', function () {
+                    if (checkbox.checked) {
+                        selectedColumns.push(element);
+                    } else {
+                        const index = selectedColumns.indexOf(element);
+                        if (index !== -1) {
+                            selectedColumns.splice(index, 1);
+                        }
+                    }
+                    updateSelectedColumns();
+                });
+
+                columnlist.appendChild(checkbox)
+;
+                columnlist.appendChild(document.createTextNode(element));
+                getColumnList.appendChild(columnlist);
+            });
+        }
+
+        function updateSelectedColumns() {
+            let selectedColumnsOutput = document.getElementById('selectedColumnsOutput');
+            selectedColumnsOutput.innerHTML = '';
+
+            if (selectedColumns.length >= 1) {
+                let selectedColumnsText = document.createElement('span');
+                selectedColumnsText.innerHTML = '<strong>Selected Columns : </strong>' + selectedColumns.join(', ');
+                selectedColumnsOutput.appendChild(selectedColumnsText);
+
+                let submitButton = document.getElementById('submitButton');
+                //const response = fetch(`/getDataFrame/?getDataFrame=${selectedColumns}`)
+                submitButton.style.display = 'block'; 
+                
+                //{% comment %} sendSelectedColumnsToServer(selectedColumns) {% endcomment %}
+            } else {
+                submitButton.style.display = 'none'; 
+            }
+        }
+ 
+        submitButton.addEventListener('click', function() {
+            console.log(selectedColumns)
+            sendSelectedColumnsToServer(selectedColumns, fileName)
+        }) 
+
+        async function sendSelectedColumnsToServer(selectedColumns, fileName) {
+            try {
+                const csrftoken = getCookie('csrftoken');
+                const response = await fetch(`/CreateDataFrame/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({ 'columns': selectedColumns, 'filename' : fileName }),
+                });
+        
+                // Handle the server's response if needed
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.error('Error sending selected columns:', error);
+            }
+        } 
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+    </script>
+</body>
+
+</html>

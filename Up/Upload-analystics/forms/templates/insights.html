@@ -1,0 +1,14 @@
+<!-- templates/insights.html -->
+
+{% extends 'home.html' %}
+
+{% block title %}Home - Data Insights{% endblock %}
+
+{% block content %}
+<h2>Welcome to Our Data Insights Landing Page!</h2>
+<h1>New DataFrame Content</h1>
+
+<!-- Display the new DataFrame -->
+{{ NewDataframe.to_html|safe }}
+
+{% endblock %}
